@@ -1,0 +1,128 @@
+<div>
+    <div class="form-group row" *ngIf="isShown">
+        <div class="hk-pg-header">
+            <h4 class="hk-pg-title" style="margin-left:35px"><span class="pg-title-icon"><span class="feather-icon"><i
+                    data-feather="archive"></i></span></span> Asset Type - Index</h4>
+          </div>
+              </div>
+        <div  class="form-group row"*ngIf="isShown" >
+            <div  class="d-flex flex-column justify-content-center mr-auto" style="width: 350px;">
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                    <input type="text" [(ngModel)]="term" nz-input placeholder="input search text"
+                        (input)="filtersearch()"/>
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                    <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+                </ng-template>
+                </div>    
+            <button style="background-color: green;color: white;"(click)="locback()">Create New</button>
+        </div>
+<nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" *ngIf="isShown" [nzData]="filteredvalues" >
+     <thead>
+        <tr>
+            <th><strong>Type Id</strong></th>
+            <th><strong>Type</strong></th>
+            <th><strong>Vehicle</strong> </th> 
+            <th><strong>Status</strong></th>  
+            <th><strong>Actions</strong></th>
+        </tr>
+    </thead>    
+    <tbody>
+ <tr *ngFor="let ord of billData; let i = index" >
+            <td>
+                {{ord.id}}
+            </td>
+            <td style="color: blue;">
+                {{ord.description}}
+            </td>
+            <td>
+                {{ord.isVehicle}}
+            </td>
+            <td>
+                <span *ngIf="ord.isActive == true">Active</span>
+                <span *ngIf="ord.isActive == false">InActive</span>
+            </td>
+<td style="color: blue;">
+             <a (click)="upddata(ord.id)" style="color: blue;" href="javascript: void(0);" class="btn btn-sm btn-light ">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                </a> 
+                    <a href="javascript: void(0);" style="color: blue;" (click)="DeActivate(ord.id)"
+                        class="btn btn-sm btn-light pull-left" slot="actions" >
+                        <i class="far fa-toggle-on"></i>
+                    </a>
+</td>
+        </tr>   
+        <button *ngIf="isShown" (click)="locback()">Go Back</button>
+        <!-- <ngb-pagination [collectionSize]="20" [(page)]="page" aria-label="Default pagination"></ngb-pagination> -->
+    </tbody> 
+</nz-table>
+</div>
+
+<div class="form-group row" *ngIf="isTable">
+    <div class="hk-pg-header">
+        <h4 class="hk-pg-title" style="margin-left:35px"><span class="pg-title-icon"><span class="feather-icon"><i
+                data-feather="archive"></i></span></span>Create Asset Type</h4>
+      </div>
+          </div>
+
+<div class="card-body" *ngIf="isTable">
+     <div class="form-group row"> 
+        <label class="col-md-3 col-form-label" for="formControlRange">Asset Type</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control"  [(ngModel)]="asset.Description" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Maint Bill Type..." />
+        </div>
+</div>
+<div class="form-group row"> 
+    <label class="col-md-3 col-form-label" for="formControlRange">Is Vehicle</label>
+    <div class="col-md-3 pt-2">
+        <input type="checkbox" class="form-control"  [(ngModel)]="asset.IsVehicle" name="example_name" value="" style="width: 50%"
+           style="width: 10px;" />
+    </div>
+</div>
+<div class="form-group row"> 
+    <label class="col-md-3 col-form-label" for="formControlRange">Is Online Payment</label>
+    <div class="col-md-3 pt-2">
+        <input type="checkbox" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" style="width: 50%"
+           style="width: 10px;" />
+    </div>
+</div>
+
+    <button type="button" class="btn btn-success px-5"  (click)="Create()" >Create</button>
+</div>
+<button type="button" *ngIf="isTable" class="btn btn-secondary " style="width: 80px;height: 30px;"  (click)="goback()">Go
+    Back</button>
+
+    <div class="card-body" *ngIf="isEditTable">
+        <div class="form-group row"> 
+           <label class="col-md-3 col-form-label" for="formControlRange">Asset Type</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.Description" name="example_name" value="" style="width: 50%"
+                   placeholder="Enter Asset Type..." />
+           </div>
+   </div>
+   <div class="form-group row" > 
+    <label class="col-md-3 col-form-label" for="formControlRange"> Status</label>
+    <span *ngIf="asset.isActive == true" >   Active </span>
+    <span *ngIf="asset.isActive == false">  InActive</span>
+</div>
+   <div class="form-group row"> 
+       <label class="col-md-3 col-form-label" for="formControlRange">Is Vehicle</label>
+       <div class="col-md-3 pt-2">
+           <input type="checkbox" class="form-control"  [(ngModel)]="asset.IsVehicle" name="example_name" value="" style="width: 50%"
+              style="width: 10px;" />
+       </div>
+   </div>
+   <div class="form-group row"> 
+       <label class="col-md-3 col-form-label" for="formControlRange">Is Online Payment</label>
+       <div class="col-md-3 pt-2">
+           <input type="checkbox" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" style="width: 50%"
+              style="width: 10px;" />
+       </div>
+   </div>
+   
+       <button type="button" class="btn btn-success px-5"  (click)="Update()" >Update</button>
+   </div>
+   <button type="button" *ngIf="isEditTable" class="btn btn-secondary " style="width: 80px;height: 30px;"  (click)="goback()">Go
+       Back</button>
+   

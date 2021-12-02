@@ -1,0 +1,97 @@
+    
+  
+<div class="card-body" *ngIf="isTable">
+    <div class="form-group row">
+        <!-- <label class="col-md-3 col-form-label" for="baseFullname">Select Contact Type</label>
+       <div ngbDropdown class="col-md-3 pt-2">
+        <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>ContactType</button>
+        <div  [(ngModel)]="trans.contacttype" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="contactType(1)" ngbDropdownItem> Employee</button>
+          <button (click)="contactType(6)" ngbDropdownItem>Customer</button>
+          <button (click)="contactType(5)" ngbDropdownItem> Location</button>
+          <button (click)="contactType(4)" ngbDropdownItem> BankAccount</button>
+          <button (click)="contactType(3)" ngbDropdownItem> Affiliate</button>
+          <button (click)="contactType(2)" ngbDropdownItem> Vendor</button>
+          <button (click)="contactType(7)" ngbDropdownItem> Others</button>
+          <div class="dropdown-divider"></div>
+        </div> -->
+      <!-- </div>  -->
+        <label class="col-md-3 col-form-label" for="baseFullname">Select Contact</label>
+        <div class="col-md-3">
+            <ng-template class="w-100" #ct let-c="result" let-t="term">
+                <ngb-highlight [result]="c.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #contactautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchcontact" [inputFormatter]="formattercontact"
+                [resultTemplate]="ct" (selectItem)="selectedcontactitem($event.item)" />
+         </div> 
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Credit Type</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>CreditType</button>
+            <div  [(ngModel)]="trans.creditTypeStatus" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="creditStatus(1)" ngbDropdownItem> Salary Advance</button>
+              <button (click)="creditStatus(2)" ngbDropdownItem>Purchase Advance</button>
+              <button (click)="creditStatus(3)" ngbDropdownItem> Maintainence Advance</button>
+              <button (click)="creditStatus(4)" ngbDropdownItem> Others</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+    
+        <label class="col-md-3 col-form-label" for="formControlRange">Payment</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control" [(ngModel)]="trans.amount" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Payment..." />
+        </div>
+    </div>
+
+    <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="formControlRange"> Payment Mode</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>PaymentMode</button>
+            <div  [(ngModel)]="trans.paymentTypeId"   ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="recStatus(-1)" ngbDropdownItem> Cash</button>
+              <button (click)="recStatus(0)" ngbDropdownItem>Online</button>
+              <button (click)="recStatus(1)" ngbDropdownItem>  Debit Card</button>
+              <button (click)="recStatus(2)" ngbDropdownItem> Credit Card</button>
+              <button (click)="recStatus(3)" ngbDropdownItem> Cheque</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+
+        <label class="col-md-3 col-form-label" for="formControlRange">Location</label>
+        <ng-template class="w-100" #ot let-o="result" let-t="term">
+            <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+        </ng-template>   
+        <input #Supplierautocomplete style="height: 30%;width: 140px;margin-top: 20px;margin-left: 20px;" #instance="ngbTypeahead" type="text"
+        class="form-control" placeholder="Search Location..." [(ngModel)]="trans.supplier"
+        [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+        (selectItem)="selectedsupplieritem($event.item)" /> 
+</div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Responsible By</label>
+         <div class="col-md-3">
+            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #dispautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchdispatch" [inputFormatter]="formatterdispatch"
+                [resultTemplate]="rt" (selectItem)="selecteddispatchitem($event.item)" />
+         </div> 
+        <label class="col-md-3 col-form-label" for="formControlRange">Reference</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control"  [(ngModel)]="trans.description" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Reference..." />
+        </div>
+    </div>
+    <div>
+        <label class="col-md-3 col-form-label" for="formControlRange">Transaction Date</label>
+        <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+    </div>
+
+    <button type="button" class="btn btn-secondary px-5"  (click)="locback()">Go
+        Back</button>
+    <button type="button" class="btn btn-success px-5 pull-right" (click)="Updatecredit()" >Update</button>
+</div>
+

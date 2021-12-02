@@ -1,0 +1,337 @@
+<div>
+    <div class="form-group row" *ngIf="isShown">
+    <div ngbDropdown class="col-md-3 pt-2">
+        <button  class="btn btn-success" id="dropdownBasic1" ngbDropdownToggle>BillStatus</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button (click)="Billstatus(1)" ngbDropdownItem>Pending</button>
+          <button (click)="Billstatus(2)" ngbDropdownItem> Paid</button>
+          <button (click)="Billstatus(3)" ngbDropdownItem> Show All Records</button>
+        </div>
+      </div> 
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-success" id="dropdownBasic1" ngbDropdownToggle>Credit Pay</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button (click)="locback()" ngbDropdownItem>Credit</button>
+              <button routerLink="/apps/creditrepay" ngbDropdownItem> Repay List</button>
+            </div>
+          </div>
+     </div> 
+     <div  class="d-flex flex-column justify-content-center mr-auto" style="width: 350px;" *ngIf="isShown">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+            <input type="text" [(ngModel)]="term" nz-input placeholder="input search text"
+                (input)="filtersearch()"/>
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+            <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+        </div>
+        
+<nz-table  #basicTable class="kit__utils__table mb-4" nzSize="small" *ngIf="isShown" [nzData]="filteredvalues">
+ <thead>
+        <tr>
+            <th>TransId</th>
+            <th>Contact</th>
+            <th>ContactType</th>
+            <th>Location</th>                            
+            <th>Amount</th>                            
+            <th>Balance</th> 
+            <th>Reference </th>  
+         <th>TransDate</th>                                        
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let ord of creditData">
+            <td style="color: blue;">
+                {{ord.billTransId}}
+            </td>
+            <td style="color: blue;">
+                {{ord.name}}
+            </td>
+            <td>
+                <span *ngIf="ord.contactTypeId == 1">Employee</span>
+                <span *ngIf="ord.contactTypeId == 2">Vendor</span>
+                <span *ngIf="ord.contactTypeId == 3">Affiliate</span>
+                <span *ngIf="ord.contactTypeId == 4">BankAccount</span>
+                <span *ngIf="ord.contactTypeId == 5">Location</span>
+                <span *ngIf="ord.contactTypeId == 6">Customer</span>
+                <span *ngIf="ord.contactTypeId == 7">Others</span>
+            </td>            
+            <td style="color: blue;">
+                {{ord.name1}}
+            </td>
+            <td>
+                &#8377; {{ord.billAmount | number: ".2"}} 
+            </td>
+<td>
+    &#8377; {{ord.balance | number: ".2"}}
+</td>
+<td>
+    {{ord.description}}
+</td>
+            <td>
+                {{ord.transDate.slice(0,10)}}
+           </td>
+<td style="color: blue;">
+           <a  (click)="getrepayList(ord.contactId)" href="javascript: void(0);" class="btn btn-sm btn-light ">
+                  <i class="fe fe-dollar-sign " style="color: blue;"></i>
+                </a>  
+             <a routerLink="/apps/editcredit/{{ord.billTransId}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+                    <i class="fa fa-edit" aria-hidden="true" style="color: blue;"></i>
+                </a> 
+                    <a href="javascript: void(0);" (click)="Delete(ord.billTransId)"
+                        class="btn btn-sm btn-light pull-left" slot="actions" style="color: blue;">
+                        <i class="fe fe-trash mr-1" ></i>
+                    </a>
+                    <a href="javascript: void(0);" routerLink="/apps/creditdetails/{{ord.billTransId}}"
+                    class="btn btn-sm btn-light pull-left" slot="actions" style="color: blue;">
+                    <i class="fad fa-info" ></i>
+                </a>
+</td>
+
+        </tr>  
+        <button *ngIf="isShown" (click)="locback()">Go Back</button>
+        <!-- <ngb-pagination [collectionSize]="20" [(page)]="page" aria-label="Default pagination"></ngb-pagination> -->
+    </tbody>
+</nz-table>
+</div>
+  
+<div class="card-body" *ngIf="isTable">
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="baseFullname">Select Contact Type</label>
+       <div ngbDropdown class="col-md-3 pt-2">
+        <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>ContactType</button>
+        <div  [(ngModel)]="trans.contacttype" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="contactType(1)" ngbDropdownItem> Employee</button>
+          <button (click)="contactType(6)" ngbDropdownItem>Customer</button>
+          <button (click)="contactType(5)" ngbDropdownItem> Location</button>
+          <button (click)="contactType(4)" ngbDropdownItem> BankAccount</button>
+          <button (click)="contactType(3)" ngbDropdownItem> Affiliate</button>
+          <button (click)="contactType(2)" ngbDropdownItem> Vendor</button>
+          <button (click)="contactType(7)" ngbDropdownItem> Others</button>
+          <div class="dropdown-divider"></div>
+        </div>
+      </div> 
+        <label class="col-md-3 col-form-label" for="baseFullname">Select Contact</label>
+        <div class="col-md-3">
+            <ng-template class="w-100" #ct let-c="result" let-t="term">
+                <ngb-highlight [result]="c.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #contactautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchcontact" [inputFormatter]="formattercontact"
+                [resultTemplate]="ct" (selectItem)="selectedcontactitem($event.item)" />
+         </div> 
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Credit Type</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>CreditType</button>
+            <div  [(ngModel)]="trans.creditTypeStatus" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="creditStatus(1)" ngbDropdownItem> Salary Advance</button>
+              <button (click)="creditStatus(2)" ngbDropdownItem>Purchase Advance</button>
+              <button (click)="creditStatus(3)" ngbDropdownItem> Maintainence Advance</button>
+              <button (click)="creditStatus(4)" ngbDropdownItem> Others</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+    
+        
+        <label class="col-md-3 col-form-label" for="formControlRange">Payment</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control" [(ngModel)]="trans.amount" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Payment..." />
+        </div>
+    </div>
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="formControlRange"> Payment Mode</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>PaymentMode</button>
+            <div  [(ngModel)]="trans.PaymentTypeId" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="recStatus(2)" ngbDropdownItem> Cash</button>
+              <button (click)="recStatus(0)" ngbDropdownItem>Online</button>
+              <button (click)="recStatus(1)" ngbDropdownItem>  Debit Card</button>
+              <button (click)="recStatus(2)" ngbDropdownItem> Credit Card</button>
+              <button (click)="recStatus(3)" ngbDropdownItem> Cheque</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+
+        <label class="col-md-3 col-form-label" for="formControlRange">Location</label>
+        <ng-template class="w-100" #ot let-o="result" let-t="term">
+            <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+        </ng-template>   
+        <input #Supplierautocomplete style="height: 30%;width: 140px;margin-top: 20px;margin-left: 20px;" #instance="ngbTypeahead" type="text"
+        class="form-control" placeholder="Search Location..." 
+        [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+        (selectItem)="selectedsupplieritem($event.item)" /> 
+</div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Responsible By</label>
+         <div class="col-md-3">
+            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #dispautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchdispatch" [inputFormatter]="formatterdispatch"
+                [resultTemplate]="rt" (selectItem)="selecteddispatchitem($event.item)" />
+         </div> 
+        <label class="col-md-3 col-form-label" for="formControlRange">Reference</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control"  [(ngModel)]="trans.description" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Reference..." />
+        </div>
+    </div>
+    <div>
+        <label class="col-md-3 col-form-label" for="formControlRange">Transaction Date</label>
+        <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+    </div>
+    <!-- <label class="col-md-3 col-form-label" for="formControlRange">Commission%</label>
+    <div class="col-md-3 pt-2">
+        <input type="text" class="form-control" [(ngModel)]="trans.Commission" name="example_name" value="" style="width: 50%"
+            placeholder="Enter Commission%..." />
+    </div> -->
+
+    <button type="button" class="btn btn-secondary px-5"  (click)="locback()">Go
+        Back</button>
+    <button type="button" class="btn btn-success px-5 pull-right" (click)="Submit()" >Submit</button>
+</div>
+
+
+<div class="card-body" *ngIf="isRepay">
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="baseFullname">Select Contact</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control" [(ngModel)]="trans.contact" name="example_name" value="" style="width: 50%"
+            placeholder="Enter Contact..." />
+         </div> 
+         <label class="col-md-3 col-form-label" for="formControlRange">Actual Repay</label>
+         <div class="col-md-3 pt-2">
+             <input type="text" class="form-control" disabled [(ngModel)]="trans.description" name="example_name" value="" style="width: 50%"
+                 placeholder="Enter Actual Repay..." />
+         </div>
+     
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Credit Type</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>CreditType</button>
+            <div  [(ngModel)]="trans.creditTypeStatus" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="creditStatus(1)" ngbDropdownItem> Salary Advance</button>
+              <button (click)="creditStatus(2)" ngbDropdownItem>Purchase Advance</button>
+              <button (click)="creditStatus(3)" ngbDropdownItem> Maintainence Advance</button>
+              <button (click)="creditStatus(4)" ngbDropdownItem> Others</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+    
+        <label class="col-md-3 col-form-label" for="formControlRange">Payment</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control" [(ngModel)]="trans.amount" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Payment..." />
+        </div>
+    </div>
+
+    <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="formControlRange"> Payment Mode</label>
+        <div ngbDropdown class="col-md-3 pt-2">
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>PaymentMode</button>
+            <div  [(ngModel)]="trans.paymentTypeId"   ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="recStatus(-1)" ngbDropdownItem> Cash</button>
+              <button (click)="recStatus(0)" ngbDropdownItem>Online</button>
+              <button (click)="recStatus(1)" ngbDropdownItem>  Debit Card</button>
+              <button (click)="recStatus(2)" ngbDropdownItem> Credit Card</button>
+              <button (click)="recStatus(3)" ngbDropdownItem> Cheque</button>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div> 
+
+        <label class="col-md-3 col-form-label" for="formControlRange">Location</label>
+        <ng-template class="w-100" #ot let-o="result" let-t="term">
+            <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+        </ng-template>   
+        <input #Supplierautocomplete style="height: 30%;width: 140px;margin-top: 20px;margin-left: 20px;" #instance="ngbTypeahead" type="text"
+        class="form-control" placeholder="Search Location..." [(ngModel)]="trans.supplier"
+        [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+        (selectItem)="selectedsupplieritem($event.item)" /> 
+</div>
+<div class="form-group row">
+    <label class="col-md-3 col-form-label" for="formControlRange"> IsCommission</label>
+    <div class="col-md-3 pt-2">
+        <input type="checkbox" class="form-control" disabled [(ngModel)]="trans.description" name="example_name" value="" style="width:10%"
+            placeholder="Enter Commission..." />
+    </div>
+</div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Responsible By</label>
+         <div class="col-md-3">
+            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #dispautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchdispatch" [inputFormatter]="formatterdispatch"
+                [resultTemplate]="rt" (selectItem)="selecteddispatchitem($event.item)" />
+         </div> 
+        <label class="col-md-3 col-form-label" for="formControlRange">Reference</label>
+        <div class="col-md-3 pt-2">
+            <input type="text" class="form-control"  [(ngModel)]="trans.description" name="example_name" value="" style="width: 50%"
+                placeholder="Enter Reference..." />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="formControlRange">Transaction Date</label>
+        <div class="col-md-3 pt-2">
+            <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+   </div>
+            <label class="col-md-3 col-form-label" for="formControlRange">Commission%</label>
+    <div class="col-md-3 pt-2">
+        <input type="text" class="form-control" disabled [(ngModel)]="trans.description" name="example_name" value="" style="width: 50%"
+            placeholder="Enter Commission..." />
+    </div>
+</div>
+<!-- <div  class="form-group row"> -->
+<!-- </div> -->
+    <nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" *ngIf="isRepay">
+        <thead>
+<tr>
+<th>BillId</th>
+<th>Contact</th>
+<th>Bill Date</th>
+<th>Credit Amount</th> 
+<th>Paid Amount</th>
+<th>Balance Amount</th>                            
+<th>Payment</th>                                        
+</tr>
+</thead>
+<tbody>
+<tr *ngFor="let ord of EditCredit">
+<td>
+{{ord.bills[0].billId}}
+</td>
+<td>
+{{ord.bills.contact.name}}
+</td>
+<td>
+    {{ord.bills.billDate}}
+</td>            
+<td>
+{{ord.bills.billAmount}}
+</td>
+<td>
+    &#8377;{{ord.bills.paidAmount| number: ".2"}}
+</td>
+<td>
+{{ord.balance}}
+</td>
+<!-- <td>
+    <input type ="text">
+</td> -->
+
+</tr>  
+</tbody>
+<button type="button" class="btn btn-success px-5" (click)="Updatecredit()" >Submit</button>
+</nz-table>
+
+    <button type="button" class="btn btn-secondary px-5"  (click)="locback()">Go
+        Back</button>
+</div>

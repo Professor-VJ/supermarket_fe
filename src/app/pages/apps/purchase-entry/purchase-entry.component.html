@@ -1,0 +1,1216 @@
+<div>
+    <div class="mb-5">
+        <ngb-tabset [hidden]="show != 1" class="nav-tabs-line nav-tabs-line-bold">
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fe fe-shopping-bag mr-1"></i>
+                    Purchase Order
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="p-2 mt-2">
+                        <div>
+                            <div class="cui__utils__heading">
+                                <strong>Purchase Order-List</strong>
+                            </div>
+                            <div class="row col-xl-12 " style="background-color: snow;">
+                                <div class="form-group row col-xl-6 mt-3">
+                                    <label class="ml-5 col-form-label">Order Status</label>
+                                    <div class="ml-3">
+                                        <select class="form-control" [(ngModel)] = "orderstatus">
+                                            <!-- <option value="0" disabled>Select Order Status</option> -->
+                                            <option>
+                                                Open
+                                            </option>
+                                            <option>
+                                                Cancelled
+                                            </option>
+                                            <option>
+                                                Completed
+                                            </option>
+                                            <option>All
+                                          </option>
+                                            <option>
+                                                OpenInProgress
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- <span *ngIf="submitted && variant.variantGroupId == 0" class="text-danger">*Please
+                                        Select
+                                        VariantGroup</span> -->
+                                </div>
+                                <div class="mr-2 col-xl-3 mt-3">
+                                    <div class="pull-right">
+                                        <button nz-button nzType="primary" (click)="open()">Advance Search</button>
+                                    </div>
+                                    <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right"
+                                        nzTitle="Advance Search" (nzOnClose)="close()">
+                                        <div class="form-group">
+                                            <!-- Full text search: <input class="form-control ml-2" type="text" name="searchTerm" /> -->
+                                            <!-- <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span> -->
+                                            <div>
+                                                <input [(ngModel)] = "orderid" style="height: 50%;" type="text" class="form-control"
+                                                    placeholder="Order Id..."/>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <ng-template class="w-100" #rt let-r="result" let-t="term">
+                                                    <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+                                                </ng-template>
+                                                <input id="typeahead-template" onfocus="this.select()"
+                                                    [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}" #rdproductautocomplete
+                                                    style="height: 84%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                                    [(ngModel)]="model5" placeholder="Search Product..." [ngbTypeahead]="search"
+                                                    [resultTemplate]="rt" [inputFormatter]="formatter"
+                                                    (selectItem)="selectedItem($event.item)" />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <input style="height: 50%;" type="text" class="form-control"
+                                                    placeholder="Bill Id..." [(ngModel)] = "billid" />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                                </ng-template>
+                                                <input #vendorautocomplete style="height: 50%;" #instance="ngbTypeahead"
+                                                    type="text" class="form-control" [(ngModel)]="model4"
+                                                    placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                                    [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                                    (selectItem)="vendorid = $event.item.id" />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control" [(ngModel)] = "numofrecords" >
+                                                    <option>
+                                                        Show 100 Records
+                                                    </option>
+                                                    <option>
+                                                        Show 1 Records
+                                                    </option>
+                                                    <option>
+                                                        Show 1000 Records
+                                                    </option>
+                                                    <option>
+                                                        Show All Records
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control" [(ngModel)] = "cancelstatus"  >
+                                                <option>Search Cancel Status</option>
+                                                    <option>
+                                                        Open
+                                                    </option>
+                                                    <option>
+                                                        Partial
+                                                    </option>
+                                                    <option>
+                                                        Closed
+                                                    </option>
+                                                    <option>
+                                                        Review Closed
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control" [(ngModel)] = "receivestatus">
+                                                    <option>Search Receive Status</option>
+                                                    <option>Open
+                                                    </option>
+                                                    <option>Partial
+                                                    </option>
+                                                    <option>Closed
+                                                    </option>
+                                                    <option>Review Closed
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div class="mr-2" style="margin-left: auto;">
+                                                <button class="btn btn-primary" (click)="getvendororders()">Search</button>
+                                                <button class="btn btn-default ml-2" (click)="getvendororders()">Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </nz-drawer>
+                                </div>
+                                <div class="mr-2 mt-3" style="margin-left: auto;">
+                                    <button class="btn btn-success" (click)="createorder()">New Order</button>
+                                </div>
+                                <div class="mr-2 mt-3" style="margin-left: auto;">
+                                    <button class="btn btn-success" (click)="receiveorder()">Receive Order</button>
+                                </div>
+
+
+                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                    class="text-danger">ProductType cannot be
+                                    Empty*</span> -->
+                            </div>
+
+                            <div class="card card-body">
+                                <nz-table #vendorsproduct nzSize="small" [nzData]="vendororders"
+                                    class="table table-striped mb-4">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><strong>Order#</strong></th>
+                                            <th scope="col"><strong>Vendor</strong></th>
+                                            <th scope="col"><strong>OrderedByLocation</strong></th>
+                                            <th scope="col"><strong>OrdDate</strong></th>
+                                            <th scope="col"><strong>DelivDate</strong></th>
+                                            <th scope="col"><strong>ReceiveStatus</strong></th>
+                                            <th scope="col"><strong>CancelStatus</strong></th>
+                                            <th scope="col"><strong>Action</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let vo of vendorsproduct.data | purchase: 0">
+                                            <td>{{vo.id}}</td>
+                                            <td>
+                                                {{vo.vendor}}
+                                            </td>
+                                            <td>
+                                                {{vo.orderedLocation}}
+                                            </td>
+                                            <td>
+                                                {{vo.orderedDate | date: 'MMM d, y'}}
+                                            </td>
+                                            <td>
+                                                {{vo.deliveryDateTime | date: 'MMM d, y'}}
+                                            </td>
+                                            <td>
+                                                {{vo.reStatus}}
+                                            </td>
+                                            <td>
+                                                {{vo.cancelStatus}}
+                                            </td>
+                                            <td>
+                                                <a href="javascript: void(0);" (click)="receivepurchase(vo.id)">
+                                                    <i class="fe fe-eye mr-3" ngbTooltip="Receive"></i>
+                                                </a>
+                                                <a href="javascript: void(0);" (click)="editpurchase(vo.id)">
+                                                    <i class="fe fe-edit mr-2" ngbTooltip="edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </nz-table>
+                            </div>
+                        </div>
+
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fe fe-archive mr-1"></i>
+                    Received Order
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="p-2 mt-2">
+                        <div [hidden]="show != 1">
+                            <div class="cui__utils__heading">
+                                <strong>Received Order-List</strong>
+                            </div>
+                            <div class="row col-xl-12  " style="background-color: snow;">
+                                <div class="form-group row col-xl-6 mt-3">
+                                    <!-- <span *ngIf="submitted && variant.variantGroupId == 0" class="text-danger">*Please
+                                        Select
+                                        VariantGroup</span> -->
+                                </div>
+                                <div class="mr-2 col-xl-3 mt-3">
+                                    <div class="pull-right">
+                                        <button nz-button nzType="primary" (click)="open()">Advance Search</button>
+                                    </div>
+                                    <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right"
+                                        nzTitle="Advance Search" (nzOnClose)="close()">
+                                        <div class="form-group">
+                                            <!-- Full text search: <input class="form-control ml-2" type="text" name="searchTerm" /> -->
+                                            <!-- <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span> -->
+                                            <div>
+                                                <input style="height: 50%;" type="text" class="form-control"
+                                                    placeholder="Order Id..." />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                                </ng-template>
+                                                <input #vendorautocomplete style="height: 50%;" #instance="ngbTypeahead"
+                                                    type="text" class="form-control" [(ngModel)]="model4"
+                                                    placeholder="Search Product..." [ngbTypeahead]="searchvendor"
+                                                    [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                                    (selectItem)="vendorid = $event.item.id" />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <input style="height: 50%;" type="text" class="form-control"
+                                                    placeholder="Bill Id..." />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                                </ng-template>
+                                                <input #vendorautocomplete style="height: 50%;" #instance="ngbTypeahead"
+                                                    type="text" class="form-control" [(ngModel)]="model4"
+                                                    placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                                    [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                                    (selectItem)="vendorid = $event.item.id" />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <input style="height: 50%;" type="text" class="form-control"
+                                                    placeholder="InvoiceNum..." />
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <select class="form-control">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                            class="text-danger">ProductType cannot be
+                                            Empty*</span> -->
+                                            </div>
+                                            <br>
+                                            <div class="mr-2" style="margin-left: auto;">
+                                                <button class="btn btn-primary" (click)="getvendororders()">Search</button>
+                                                <button class="btn btn-default ml-2" (click)="getvendororders()">Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </nz-drawer>
+                                </div>
+                                <div class="mr-2 mt-3 " style="margin-left: auto;">
+                                    <button class="btn btn-success" (click)="createorder()">New Order</button>
+                                </div>
+                                <div class="mr-2 mt-3" style="margin-left: auto;">
+                                    <button class="btn btn-success" (click)="receiveorder()">Receive Order</button>
+                                </div>
+
+
+                                <!-- <span *ngIf="submitted && product.productTypeId == 0"
+                                    class="text-danger">ProductType cannot be
+                                    Empty*</span> -->
+                            </div>
+                            <br>
+
+                            <div class="card card-body">
+                                <!-- <div class="form-group form-inline"> -->
+                                <!-- Full text search: <input class="form-control ml-2" type="text" name="searchTerm" /> -->
+                                <!-- <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span> -->
+                                <!-- <div>
+                                        <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                        </ng-template>
+                                        <input #vendorautocomplete style="height: 70%;" #instance="ngbTypeahead"
+                                            type="text" class="form-control" [(ngModel)]="model4"
+                                            placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                            [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                            (selectItem)="vendorid = $event.item.id" />
+                                    </div> -->
+                                <!-- <div class="mr-2" style="margin-left: auto;">
+                                        <button class="btn btn-primary" (click)="getvendororders()">Fetch
+                                            Orders</button>
+                                    </div> -->
+                                <!-- <div class="mr-2">
+                                        <button class="btn btn-success" (click)="createorder()">New Order</button>
+                                    </div> -->
+                                <!-- <div>
+                                        <button class="btn btn-success" (click)="receiveorder()">Receive Order</button>
+                                    </div> -->
+                                <!-- </div> -->
+
+
+                                <nz-table #receivedorder nzSize="small" [nzData]="receivedorders"
+                                    class="table table-striped mb-4">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><strong>Bill#</strong></th>
+                                            <th scope="col"><strong>Vendor</strong></th>
+                                            <th scope="col"><strong>Store</strong></th>
+                                            <th scope="col"><strong>BillAmt</strong></th>
+                                            <th scope="col"><strong>PaidAmt</strong></th>
+                                            <th scope="col"><strong>ReceiveDate</strong></th>
+                                            <th scope="col"><strong>Action</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let ro of receivedorder.data">
+                                            <td>{{ro.billId}}</td>
+                                            <td>
+                                                {{ro.vendor}}
+                                            </td>
+                                            <td>
+                                                {{ro.storeName}}
+                                            </td>
+                                            <td>
+                                                {{ro.billAmount}}
+                                            </td>
+                                            <td>
+                                                {{ro.paidAmount}}
+                                            </td>
+                                            <td>
+                                                {{ro.receivedDate | date: 'MMM d,
+                                                y'}}
+                                            </td>
+                                            <td>
+                                                <!-- <a href="javascript: void(0);" >
+                                                    <i class="fe fe-eye mr-3" ngbTooltip="Receive"></i>
+                                                </a> -->
+                                                <a href="javascript: void(0);"
+                                                    (click)="editReceivedPurchase(ro.orderId)">
+                                                    <i class="fe fe-edit mr-2" ngbTooltip="edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </nz-table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+        <!-- ////////////////////////////////////////////////////////purchase entry////////////////////////////////////        -->
+        <div class="p-2 mt-2">
+            <div *ngIf="show == 2">
+                <div class="cui__utils__heading">
+                    <strong *ngIf="!order.Id">New Purchase Entry</strong>
+                    <strong *ngIf="order.Id">Edit Purchase Entry</strong>
+                </div>
+                <div *ngIf="order.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-4 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <button class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button>
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label">Supplier: </strong>
+                        </div>
+                        <div class="col-xl-4 mb-3">
+                            <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                style="height:80%;width: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                (selectItem)="selectedvendoritem($event.item)" />
+
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label">Delivery Date: </strong>
+                        </div>
+                        <div class="col-xl-2 mb-3">
+                            <button class="btn btn-sm btn-light">{{currentorderdetails.deliveryDateTime |
+                                date: 'MMM d,
+                                y'}}</button>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!order.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-4 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <!-- <button
+                                    class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button> -->
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Supplier: </strong>
+                        </div>
+                        <div class="col-xl-4 mb-3">
+                            <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                style="height:80%;width: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                (selectItem)="selectedvendoritem($event.item)" />
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Delivery Date: </strong>
+                        </div>
+                        <div class="col-xl-2 mb-3">
+                            <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)">
+                            </nz-date-picker>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-xl-12">
+                <div [hidden]="show != 2" class="row">
+                    <nz-card style="height: 90% ;width:23%;" nzTitle="Select Product" [nzExtra]="extraTemplate">
+                        <div>
+                            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input id="typeahead-template" onfocus="this.select()"
+                                [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}" #productautocomplete
+                                style="height: 84%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model1" placeholder="Search Product..." [ngbTypeahead]="search"
+                                [resultTemplate]="rt" [inputFormatter]="formatter"
+                                (selectItem)="selectedItem($event.item)" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #quantityel type="number"
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0}"
+                                [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty"
+                                class="form-control" (keyup.enter)="temporaryItem.Quantity>0&&price.focus();" min="1" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #price placeholder="price..."
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}" onfocus="this.select()"
+                                [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+                                (keyup.enter)="discel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #discel [(ngModel)]="temporaryItem.DiscAmount" onfocus="this.select()"
+                                placeholder="DiscAmount..." type="number" class="form-control"
+                                (keyup.enter)="discperel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #discperel [(ngModel)]="temporaryItem.DiscPercent" onfocus="this.select()"
+                                placeholder="DiscPercent..." type="number" class="form-control"
+                                (keyup.enter)="addItem()" />
+                        </div>
+                        <br>
+                    </nz-card>
+                    <ng-template #extraTemplate>
+                        <!-- <a>
+                                <button nz-button [disabled]="temporaryItem.quantity<1" nzType="primary" nzSize="small"
+                                    (click)="addItem()">ADD</button>
+                            </a> -->
+                        <a href="javascript: void(0);" (click)="addItem()">
+                            <i class="fe fe-plus fa-lg"></i>
+                        </a>
+                    </ng-template>
+                    <div class="col-xs-12 col-md-9">
+                        <div class="card">
+                            <!-- <h2 class="badge-example">
+                                    Purchase
+                                </h2> -->
+                            <!-- <div class="card-header card-header-flex"> -->
+                            <!-- <div class=" justify-content-center mr-2 mt-3">
+                                        <input nz-input type="number" [(ngModel)]="OrderNo" placeholder="Order No" min="1" />
+                                    </div> -->
+                            <!-- <div class=" justify-content-center mr-auto mt-3">
+                                        <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                        </ng-template>
+                                        <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                            style="height: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                            [(ngModel)]="model" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                            [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                            (selectItem)="selectedvendoritem($event.item)" />
+                                    </div> -->
+                            <!--<div class="d-flex flex-column justify-content-center mr-2">
+                                        <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center ">
+                                        <button class="btn btn-success" href="javascript: void(0);" (click)="savePurchase()">
+                                            Save
+                                        </button> -->
+                            <!-- <button class="btn btn-success" [disabled]="!(order&&order.Items.length > 0)"
+                                            href="javascript: void(0);" (click)="savePurchase()">
+                                            Save Purchase
+                                        </button> -->
+                            <!-- </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center">
+                                        <div class="text-uppercase text-muted text-nowrap">Grand Total</div>
+                                        <div class="font-weight-bold text-dark"> 200</div>
+                                      </div> -->
+                            <!-- </div> -->
+                            <nz-table #getproduct nzSize="small" [nzShowPagination]="false" [nzData]="products"
+                                class="kit__utils__table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>DiscAmount</th>
+                                        <!-- <th>DiscPercent</th> -->
+                                        <th>Total Price</th>
+                                        <th colspan="2">Tax</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let item of order&&order.Items; let i = index">
+                                        <tr>
+                                            <td rowspan="2">{{i+1}}</td>
+                                            <td rowspan="2">
+                                                <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                                                    {{item.ProductName}}
+                                                </a>
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.OrderQuantity" min="1"
+                                                    (input)="order.setbillamount()">
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small' [(ngModel)]="item.Price"
+                                                    min="1" (input)="order.setbillamount()">
+                                            </td>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscAmount" min="1"
+                                                    (input)="order.setbillamount()">
+                                            </td>
+                                            <td rowspan="2"> &#8377; {{item.TotalAmount}}</td>
+                                            <td rowspan="2">
+                                                {{item.Tax1 + item.Tax2 + item.Tax3}} %
+                                            </td>
+                                            <td rowspan="2">
+                                                &#8377; {{item.TaxAmount}}
+                                            </td>
+                                            <td rowspan="2" class="text-right">
+                                                <a href="javascript: void(0);" (click)="delete(i)"
+                                                    class="btn btn-sm btn-light pull-left" slot="actions">
+                                                    <i class="fe fe-trash mr-1"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscPercent" min="1"
+                                                    (input)="order.setbillamount()">
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <tr *ngIf="!(order&&order.Items.length)">
+                                        <td colspan="10" class="text-center">
+                                            Cart is Empty!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                            <div *ngIf="order&&order.Items.length"
+                                class="text-right font-size-18 text-dark p-4 rounded bg-light">
+                                <div>
+                                    Sub - Total amount: <span class="font-weight-bold">&#8377;
+                                        {{order.Subtotal}}</span>
+                                </div>
+                                <div>
+                                    Tax: <span class="font-weight-bold">&#8377; {{order.TaxAmount}}</span>
+                                </div>
+                                <div>
+                                    Discount: <span class="font-weight-bold">&#8377;
+                                        -{{order.DiscAmount}}</span>
+                                </div>
+                                <div>
+                                    Grand Total: <span class="font-weight-bold font-size-24">&#8377;
+                                        {{order.BillAmount}}</span>
+                                </div>
+                                <!-- <a href="javascript: void(0);" class="btn btn-default mr-3 mt-3" (click)="back()">
+                                        Back
+                                    </a> -->
+                                <button type="button" class="btn btn-link mr-3 mt-3 " (click)="back()"><i
+                                        class="fe fe-corner-up-left mr-1"></i> Back to List</button>
+
+                                <!-- <a href="javascript: void(0);" class="btn btn-outline-success mr-3 mt-3">
+                                        Print
+                                    </a> -->
+                                <button class="btn btn-success" [disabled]="!(order&&order.Items.length > 0)"
+                                    href="javascript: void(0);" (click)="savePurchase()">
+                                    Save Purchase
+                                </button>
+                                <!-- <a href="javascript: void(0);" class="btn btn-success mt-3">
+                                        Proceed Payment
+                                    </a> -->
+                            </div>
+                        </div>
+                        <button *ngIf="!(order&&order.Items.length)" type="button" class="btn btn-link mr-2 mb-2 mt-3"
+                            (click)="back()"><i class="fe fe-corner-up-left mr-1"></i> Back to List</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ////////////////////////////////////////////////////////////receive////////////////////////////////////////////////////// -->
+            <div *ngIf="show == 3">
+                <div class="cui__utils__heading">
+                    <strong>Receive Purchase Entry</strong>
+                </div>
+                <div *ngIf="order?.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <button class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button>
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">Supplier: </strong> <button
+                                class="btn btn-sm btn-light">{{currentorderdetails.vendor}}</button>
+                            <a></a>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">Delivery Date: </strong> <button
+                                class="btn btn-sm btn-light">{{currentorderdetails.deliveryDateTime | date:
+                                'MMM
+                                d,
+                                y'}}</button>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!order?.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-4 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <!-- <button
+                                    class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button> -->
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Supplier: </strong>
+                        </div>
+                        <div class="col-xl-4 mb-3">
+                            <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                style="height:80%;width: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model2" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                (selectItem)="selectedvendoritem($event.item)" />
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Delivery Date: </strong>
+                        </div>
+                        <div class="col-xl-2 mb-3">
+                            <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)">
+                            </nz-date-picker>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class=" col-xl-12">
+                <div [hidden]="show != 3" class="row">
+                    <nz-card style="height: 90% ;width:23%;" nzTitle="Select Product" [nzExtra]="rextraTemplate">
+                        <div>
+                            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input id="typeahead-template" onfocus="this.select()"
+                                [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}" #rproductautocomplete
+                                style="height: 84%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model5" placeholder="Search Product..." [ngbTypeahead]="search"
+                                [resultTemplate]="rt" [inputFormatter]="formatter"
+                                (selectItem)="selectedItem($event.item)" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rquantityel type="number"
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.rQuantity <= 0}"
+                                [(ngModel)]="temporaryItem.rQuantity" onfocus="this.select()" placeholder="Qty"
+                                class="form-control" (keyup.enter)="temporaryItem.rQuantity>0&&rprice.focus();"
+                                min="1" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rprice placeholder="price..."
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}" onfocus="this.select()"
+                                [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+                                (keyup.enter)="rdiscel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rdiscel [(ngModel)]="temporaryItem.DiscAmount" onfocus="this.select()"
+                                placeholder="DiscAmount..." type="number" class="form-control"
+                                (keyup.enter)="rdiscperel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rdiscperel [(ngModel)]="temporaryItem.DiscPercent" onfocus="this.select()"
+                                placeholder="DiscPercent..." type="number" class="form-control"
+                                (keyup.enter)="addReceiveItem()" />
+                        </div>
+                        <br>
+                    </nz-card>
+                    <ng-template #rextraTemplate>
+                        <!-- <a>
+                                <button nz-button [disabled]="temporaryItem.quantity<1" nzType="primary" nzSize="small"
+                                    (click)="addItem()">ADD</button>
+                            </a> -->
+                        <a href="javascript: void(0);" (click)="addReceiveItem()">
+                            <i class="fe fe-plus fa-lg"></i>
+                        </a>
+                    </ng-template>
+                    <div class="col-xs-12 col-md-9">
+                        <div class="card">
+                            <!-- <h2 class="badge-example">
+                                    Purchase
+                                </h2> -->
+                            <!-- <div class="card-header card-header-flex"> -->
+                            <!-- <div class=" justify-content-center mr-2 mt-3">
+                                        <input nz-input type="number" [(ngModel)]="OrderNo" placeholder="Order No" min="1" />
+                                    </div> -->
+                            <!-- <div class=" justify-content-center mr-auto mt-3">
+                                        <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                        </ng-template>
+                                        <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                            style="height: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                            [(ngModel)]="model" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                            [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                            (selectItem)="selectedvendoritem($event.item)" />
+                                    </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center mr-2">
+                                        <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                                    </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center "> -->
+                            <!-- <button class="btn btn-success" href="javascript: void(0);" (click)="savePurchase()">
+                                            Receive
+                                        </button> -->
+                            <!-- <button class="btn btn-success" [disabled]="!(order&&order.Items.length > 0)"
+                                            href="javascript: void(0);" (click)="savePurchase()">
+                                            Save Purchase
+                                        </button> -->
+                            <!-- </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center">
+                                        <div class="text-uppercase text-muted text-nowrap">Grand Total</div>
+                                        <div class="font-weight-bold text-dark"> 200</div>
+                                      </div> -->
+                            <!-- </div> -->
+                            <nz-table #getproduct nzSize="small" [nzShowPagination]="false" [nzData]="products"
+                                class="kit__utils__table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Description</th>
+                                        <th>Open Qty</th>
+                                        <th>Received Qty</th>
+                                        <th>Price</th>
+                                        <th>DiscAmount</th>
+                                        <!-- <th>DiscPercent</th> -->
+                                        <th>Total Price</th>
+                                        <th colspan="2">Tax</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let item of order&&order.Items; let i = index">
+                                        <tr>
+                                            <td rowspan="2">{{i+1}}</td>
+                                            <td rowspan="2">
+                                                <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                                                    {{item.ProductName}}
+                                                </a>
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small' disabled
+                                                    [(ngModel)]="item.OrderQuantity" min="1">
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.ReceivedQuantity" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small' [(ngModel)]="item.Price"
+                                                    min="1" (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscAmount" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td rowspan="2"> &#8377; {{item.TotalAmount}}</td>
+                                            <td rowspan="2">
+                                                {{item.Tax1 + item.Tax2 + item.Tax3}} %
+                                            </td>
+                                            <td rowspan="2">
+                                                &#8377; {{item.TaxAmount}}
+                                            </td>
+                                            <td rowspan="2" class="text-right">
+                                                <a href="javascript: void(0);" (click)="delete(i)"
+                                                    class="btn btn-sm btn-light pull-left" slot="actions">
+                                                    <i class="fe fe-trash mr-1"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscPercent" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <tr *ngIf="!(order&&order.Items.length)">
+                                        <td colspan="10" class="text-center">
+                                            Cart is Empty!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                            <div *ngIf="order&&order.Items.length"
+                                class="text-right font-size-18 text-dark p-4 rounded bg-light">
+                                <div>
+                                    <div>
+                                        Sub - Total amount: <span class="font-weight-bold">&#8377;
+                                            {{order.Subtotal}}</span>
+                                    </div>
+                                    <div>
+                                        Tax: <span class="font-weight-bold">&#8377;
+                                            {{order.TaxAmount}}</span>
+                                    </div>
+                                    <div>
+                                        Discount: <span class="font-weight-bold">&#8377;
+                                            -{{order.DiscAmount}}</span>
+                                    </div>
+                                    <div>
+                                        Grand Total: <span class="font-weight-bold font-size-24">&#8377;
+                                            {{order.BillAmount}}</span>
+                                    </div>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-link mr-3 mt-3" (click)="back()">
+                                            Back
+                                        </a> -->
+                                    <button type="button" class="btn btn-link mr-3 mt-3 " (click)="back()"><i
+                                            class="fe fe-corner-up-left mr-1"></i> Back to
+                                        List</button>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-outline-success mr-3 mt-3">
+                                            Print
+                                        </a> -->
+                                    <button class="btn btn-success mt-3" href="javascript: void(0);"
+                                        (click)="saveReceivePurchase()">
+                                        Receive
+                                    </button>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-success mt-3">
+                                            Proceed Payment
+                                        </a> -->
+                                </div>
+
+                            </div>
+                        </div>
+                        <button *ngIf="!(order&&order.Items.length)" type="button" class="btn btn-link mr-2 mb-2"
+                            (click)="back()"><i class="fe fe-corner-up-left mr-1"></i> Back to List</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ///////////////////////////////////////received entry///////////////////// -->
+            <div *ngIf="show == 4">
+                <div class="cui__utils__heading">
+                    <strong>Received Purchase </strong>
+                </div>
+                <div *ngIf="order.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <button class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button>
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">Supplier: </strong> <button
+                                class="btn btn-sm btn-light">{{currentorderdetails.vendor}}</button>
+                            <a></a>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">Delivery Date: </strong> <button
+                                class="btn btn-sm btn-light">{{currentorderdetails.deliveryDateTime | date:
+                                'MMM
+                                d,
+                                y'}}</button>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!order.Id" class="card">
+                    <div class="col-xl-12 row mt-3 ">
+                        <div class="col-xl-4 mb-3">
+                            <strong class="cui-crypto-dashboard-form-label">OrderedByLocation: </strong>
+                            <!-- <button
+                                                class="btn btn-sm btn-light">{{currentorderdetails.orderedLocation}}</button> -->
+
+                            <!-- <span *ngIf="submitted && product.name == ''" class="text-danger">Product name cannot be empty*</span> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Supplier: </strong>
+                        </div>
+                        <div class="col-xl-4 mb-3">
+                            <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                style="height:80%;width: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model2" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                (selectItem)="selectedvendoritem($event.item)" />
+                            <!-- <input type="text" class="form-control" placeholder="Enter Description..." /> -->
+                        </div>
+                        <div class="mt-1">
+                            <strong class="cui-crypto-dashboard-form-label mb-3">Delivery Date: </strong>
+                        </div>
+                        <div class="col-xl-2 mb-3">
+                            <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)">
+                            </nz-date-picker>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Product Code.." /> -->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class=" col-xl-12">
+                <div [hidden]="show != 4" class="row">
+                    <nz-card style="height: 90% ;width:23%;" nzTitle="Select Product" [nzExtra]="rextraTemplate">
+                        <div>
+                            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <input id="typeahead-template" onfocus="this.select()"
+                                [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}" #rdproductautocomplete
+                                style="height: 84%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                [(ngModel)]="model5" placeholder="Search Product..." [ngbTypeahead]="search"
+                                [resultTemplate]="rt" [inputFormatter]="formatter"
+                                (selectItem)="selectedItem($event.item)" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rdquantityel type="number"
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.rQuantity <= 0}"
+                                [(ngModel)]="temporaryItem.rQuantity" onfocus="this.select()" placeholder="Qty"
+                                class="form-control" (keyup.enter)="temporaryItem.rQuantity>0&&rdprice.focus();"
+                                min="1" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rdprice placeholder="price..."
+                                [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}" onfocus="this.select()"
+                                [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+                                (keyup.enter)="rddiscel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rddiscel [(ngModel)]="temporaryItem.DiscAmount" onfocus="this.select()"
+                                placeholder="DiscAmount..." type="number" class="form-control"
+                                (keyup.enter)="rddiscperel.focus()" />
+                        </div>
+                        <br>
+                        <div>
+                            <input #rddiscperel [(ngModel)]="temporaryItem.DiscPercent" onfocus="this.select()"
+                                placeholder="DiscPercent..." type="number" class="form-control"
+                                (keyup.enter)="addupdateReceivedItem()" />
+                        </div>
+                        <br>
+                    </nz-card>
+                    <ng-template #rextraTemplate>
+                        <!-- <a>
+                                            <button nz-button [disabled]="temporaryItem.quantity<1" nzType="primary" nzSize="small"
+                                                (click)="addItem()">ADD</button>
+                                        </a> -->
+                        <a href="javascript: void(0);" (click)="addupdateReceivedItem()">
+                            <i class="fe fe-plus fa-lg"></i>
+                        </a>
+                    </ng-template>
+                    <div class="col-xs-12 col-md-9">
+                        <div class="card">
+                            <!-- <h2 class="badge-example">
+                                                Purchase
+                                            </h2> -->
+                            <!-- <div class="card-header card-header-flex"> -->
+                            <!-- <div class=" justify-content-center mr-2 mt-3">
+                                                    <input nz-input type="number" [(ngModel)]="OrderNo" placeholder="Order No" min="1" />
+                                                </div> -->
+                            <!-- <div class=" justify-content-center mr-auto mt-3">
+                                                    <ng-template class="w-100" #vn let-r="result" let-t="term">
+                                                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                                    </ng-template>
+                                                    <input #vendorautocomplete [ngClass]="{'is-invalid':vendorsubmitted &&!order.SuppliedById}"
+                                                        style="height: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                                                        [(ngModel)]="model" placeholder="Search Vendor..." [ngbTypeahead]="searchvendor"
+                                                        [resultTemplate]="vn" [inputFormatter]="formattervendor"
+                                                        (selectItem)="selectedvendoritem($event.item)" />
+                                                </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center mr-2">
+                                                    <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                                                </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center "> -->
+                            <!-- <button class="btn btn-success" href="javascript: void(0);" (click)="savePurchase()">
+                                                        Receive
+                                                    </button> -->
+                            <!-- <button class="btn btn-success" [disabled]="!(order&&order.Items.length > 0)"
+                                                        href="javascript: void(0);" (click)="savePurchase()">
+                                                        Save Purchase
+                                                    </button> -->
+                            <!-- </div> -->
+                            <!-- <div class="d-flex flex-column justify-content-center">
+                                                    <div class="text-uppercase text-muted text-nowrap">Grand Total</div>
+                                                    <div class="font-weight-bold text-dark"> 200</div>
+                                                  </div> -->
+                            <!-- </div> -->
+                            <nz-table #getproduct nzSize="small" [nzShowPagination]="false" [nzData]="products"
+                                class="kit__utils__table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Description</th>
+                                        <th>Open Qty</th>
+                                        <th>Received Qty</th>
+                                        <th>Price</th>
+                                        <th>DiscAmount</th>
+                                        <!-- <th>DiscPercent</th> -->
+                                        <th>Total Price</th>
+                                        <th colspan="2">Tax</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let item of order&&order.Items; let i = index">
+                                        <tr>
+                                            <td rowspan="2">{{i+1}}</td>
+                                            <td rowspan="2">
+                                                <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                                                    {{item.ProductName}}
+                                                </a>
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small' disabled
+                                                    [(ngModel)]="item.OrderQuantity" min="1">
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.ReceivedQuantity" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td rowspan="2">
+                                                <input type="number" nz-input nzSize='small' [(ngModel)]="item.Price"
+                                                    min="1" (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscAmount" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                            <td rowspan="2"> &#8377; {{item.TotalAmount}}</td>
+                                            <td rowspan="2">
+                                                {{item.Tax1 + item.Tax2 + item.Tax3}} %
+                                            </td>
+                                            <td rowspan="2">
+                                                &#8377; {{item.TaxAmount}}
+                                            </td>
+                                            <td rowspan="2" class="text-right">
+                                                <a href="javascript: void(0);" (click)="delete(i)"
+                                                    class="btn btn-sm btn-light pull-left" slot="actions">
+                                                    <i class="fe fe-trash mr-1"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="number" nz-input nzSize='small'
+                                                    [(ngModel)]="item.DiscPercent" min="1"
+                                                    (input)="order.setreceivedbillamount()">
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <tr *ngIf="!(order&&order.Items.length)">
+                                        <td colspan="10" class="text-center">
+                                            Cart is Empty!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                            <div *ngIf="order&&order.Items.length"
+                                class="text-right font-size-18 text-dark p-4 rounded bg-light">
+                                <div>
+                                    <div>
+                                        Sub - Total amount: <span class="font-weight-bold">&#8377;
+                                            {{order.Subtotal}}</span>
+                                    </div>
+                                    <div>
+                                        Tax: <span class="font-weight-bold">&#8377;
+                                            {{order.TaxAmount}}</span>
+                                    </div>
+                                    <div>
+                                        Discount: <span class="font-weight-bold">&#8377;
+                                            -{{order.DiscAmount}}</span>
+                                    </div>
+                                    <div>
+                                        Grand Total: <span class="font-weight-bold font-size-24">&#8377;
+                                            {{order.BillAmount}}</span>
+                                    </div>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-link mr-3 mt-3" (click)="back()">
+                                                        Back
+                                                    </a> -->
+                                    <button type="button" class="btn btn-link mr-3 mt-3 " (click)="back()"><i
+                                            class="fe fe-corner-up-left mr-1"></i> Back to
+                                        List</button>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-outline-success mr-3 mt-3">
+                                                        Print
+                                                    </a> -->
+                                    <button class="btn btn-success mt-3" href="javascript: void(0);"
+                                        (click)="updateReceivedOrder()">
+                                        Update Receive
+                                    </button>
+                                    <!-- <a href="javascript: void(0);" class="btn btn-success mt-3">
+                                                        Proceed Payment
+                                                    </a> -->
+                                </div>
+
+                            </div>
+                        </div>
+                        <button *ngIf="!(order&&order.Items.length)" type="button" class="btn btn-link mr-2 mb-2"
+                            (click)="back()"><i class="fe fe-corner-up-left mr-1"></i> Back to List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

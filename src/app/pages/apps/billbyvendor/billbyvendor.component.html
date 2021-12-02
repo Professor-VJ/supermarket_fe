@@ -1,0 +1,157 @@
+<div class="form-group row">
+    <div class="hk-pg-header">
+        <h4 class="hk-pg-title" style="margin-left:35px"><span class="pg-title-icon"><span class="feather-icon"><i
+                data-feather="archive"></i></span></span> Bills Pay Vendor</h4>
+      </div>
+          </div>
+          <div class="form-group row">
+           <label class="col-md-3 col-form-label" for="baseFullname">Select Vendor</label>
+          <div class="col-md-3">
+            <ng-template class="w-100" #ct let-c="result" let-t="term">
+                <ngb-highlight [result]="c.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #contactautocomplete style="height: 70%;width: 100px;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..."  [ngbTypeahead]="searchvendor" [inputFormatter]="formattervendor"
+                [resultTemplate]="ct" (selectItem)="selectedvendoritem($event.item)" />
+         </div>  
+          <label class="col-md-3 col-form-label" for="formControlRange">Payment Location</label>
+          <div class="col-md-3"> 
+          <ng-template class="w-100" #ot let-o="result" let-t="term">
+             <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+         </ng-template>  
+         <input #Supplierautocomplete style="height: 70%;width: 140px" #instance="ngbTypeahead" type="text"
+         class="form-control" placeholder="Search Location..." 
+         [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+         (selectItem)="selectedsupplieritem($event.item)" />   
+          </div>
+          </div>
+
+
+          <div class="card-body" *ngIf="isTable">
+            <div class="form-group row"> 
+               <label class="col-md-3 col-form-label" for="formControlRange">Vendor</label>
+               <div class="col-md-3 pt-2">
+                   <input type="text" class="form-control"  [(ngModel)]="asset.Description" name="example_name" value=""
+                        />
+               </div>
+       <!-- </div>
+       <div class="form-group row">  -->
+           <label class="col-md-3 col-form-label" for="formControlRange">Payment Location</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.IsVehicle" name="example_name" value="" 
+                  />
+           </div>
+       </div>
+       <div class="form-group row"> 
+           <label class="col-md-3 col-form-label" for="formControlRange">Total Balance</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                  />
+           </div>
+       <!-- </div>
+       <div class="form-group row">  -->
+           <label class="col-md-3 col-form-label" for="formControlRange">Payment</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                   />
+           </div>
+       </div>
+       
+       <div class="form-group row"> 
+           <label class="col-md-3 col-form-label" for="formControlRange">Reference</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                   />
+           </div>
+       <!-- </div>
+       <div class="form-group row">  -->
+           <label class="col-md-3 col-form-label" for="formControlRange">Payment mode</label>
+           <div class="col-md-3 pt-2">
+               <input type="text" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                   />
+           </div>
+       </div>
+       <div class="form-group row"> 
+           <label class="col-md-3 col-form-label" for="formControlRange">Transaction Date</label>
+           <div class="col-md-3 pt-2">
+               <input type="date" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                 />
+           </div>
+       <!-- </div>
+       <div class="form-group row">  -->
+           <label class="col-md-3 col-form-label" for="formControlRange">Transaction Time</label>
+           <div class="col-md-3 pt-2">
+               <input type="time" class="form-control"  [(ngModel)]="asset.IsOnlinePayment" name="example_name" value="" 
+                 />
+           </div>
+       </div>
+       
+          <nz-table  #basicTable class="kit__utils__table mb-4" nzSize="small" *ngIf="isTable">
+            <thead>
+                   <tr>
+                       <th>Bill Id</th>
+                       <th>Contact</th>
+                       <th>Bill Date</th>
+                       <th>Bill Amount</th>                            
+                       <th>Paid Amount</th>                            
+                       <th>Balance Amount</th> 
+                       <th>Payment</th> 
+                       <!-- <th>Reference </th>  
+                       <th>Action</th> -->
+                   </tr>
+               </thead>
+               <tbody>
+               <!-- <tr *ngFor="let ord of creditData.ord">
+                       <td style="color: blue;">
+                           {{ord.billTransId}}
+                       </td>
+                       <td style="color: blue;">
+                           {{ord.name}}
+                       </td>
+                       <td>
+                           <span *ngIf="ord.contactTypeId == 1">Employee</span>
+                           <span *ngIf="ord.contactTypeId == 2">Vendor</span>
+                           <span *ngIf="ord.contactTypeId == 3">Affiliate</span>
+                           <span *ngIf="ord.contactTypeId == 4">BankAccount</span>
+                           <span *ngIf="ord.contactTypeId == 5">Location</span>
+                           <span *ngIf="ord.contactTypeId == 6">Customer</span>
+                           <span *ngIf="ord.contactTypeId == 7">Others</span>
+                       </td>            
+                       <td style="color: blue;">
+                           {{ord.name1}}
+                       </td>
+                       <td>
+                           &#8377; {{ord.billAmount | number: ".2"}} 
+                       </td>
+           <td>
+               &#8377; {{ord.balance | number: ".2"}}
+           </td> -->
+           <!-- <td>
+               {{ord.description}}
+           </td>
+                       <td>
+                           {{ord.transDate.slice(0,10)}}
+                      </td>
+           <td style="color: blue;">
+                      <a  (click)="getrepayList(ord.billTransId)" href="javascript: void(0);" class="btn btn-sm btn-light ">
+                             <i class="fe fe-dollar-sign " style="color: blue;"></i>
+                           </a>  
+                        <a routerLink="/apps/editcredit/{{ord.billTransId}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+                               <i class="fa fa-edit" aria-hidden="true" style="color: blue;"></i>
+                           </a> 
+                               <a href="javascript: void(0);" (click)="Delete(ord.billTransId)"
+                                   class="btn btn-sm btn-light pull-left" slot="actions" style="color: blue;">
+                                   <i class="fe fe-trash mr-1" ></i>
+                               </a>
+                               <a href="javascript: void(0);" routerLink="/apps/creditdetails/{{ord.billTransId}}"
+                               class="btn btn-sm btn-light pull-left" slot="actions" style="color: blue;">
+                               <i class="fad fa-info" ></i>
+                           </a>
+           </td> -->
+           
+                   <!-- </tr>   -->
+               </tbody>
+           </nz-table>
+              <button  class="btn btn-success px-5"  (click)="Submit()" >Submit</button>
+</div>
+ 
